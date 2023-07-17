@@ -63,7 +63,7 @@ module.exports = (robot) => {
       console.log(typeof countryName);
 
       // クイズを出題
-      res.send(`この場所はどこの国でしょう？国名を答えてね！（国名コードに基づいた判定です）\n緯度: ${latitude}\n経度: ${longitude}`);
+      res.send(`この場所はどこの国でしょう？国名を答えてね！\n緯度: ${latitude}\n経度: ${longitude}`);
 
       // 回答の受信時の処理を登録
       robot.hear(/^(.+)/i, (msg) => {
