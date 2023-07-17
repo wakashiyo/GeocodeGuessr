@@ -13,6 +13,18 @@ if (!GOOGLE_MAPS_API_KEY) {
 const googleMapsClient = new Client({});
 
 module.exports = (robot) => {
+  // 回答の受信時の処理
+  function handleAnswer(msg) {
+    const answer = msg.match[1].trim().replace(/^Hubot\s+/i, ''); // ユーザーの回答
+
+    // 正誤判定
+    if (answer === countryName) {
+      msg.send('正解です！');
+    } else {
+      msg.send(`残念！正解は ${countryName} です！`);
+    }
+  }
+
   // メッセージの受信時に実行される処理
   robot.respond(/guess$/i, async (res) => {
     try {
@@ -24,7 +36,6 @@ module.exports = (robot) => {
       const maxLatitude = 90.0;   // 緯度の最大値
       const minLongitude = -180.0;  // 経度の最小値
       const maxLongitude = 180.0;   // 経度の最大値
-
 
       const latitude = minLatitude + (maxLatitude - minLatitude) * Math.random();
       const longitude = minLongitude + (maxLongitude - minLongitude) * Math.random();
@@ -75,18 +86,4 @@ module.exports = (robot) => {
       res.reply('ごめんね、うまくデータを取得できなかったみたい。もう一度試してみてね。');
     }
   });
-
-  // 回答の受信時の処理
-  function handleAnswer(msg) {
-    const answer = msg.match[1].trim().replace(/^Hubot\s+/i, ''); // ユーザーの回答
-
-    // 正誤判定
-    if (answer === countryName) {
-      msg.send('正解です！');
-    } else {
-      msg.send(`残念！正解は ${countryName} です！`);
-      // console.log(answer);
-      // console.log(typeof answer);
-    }
-  };
 };
