@@ -35,7 +35,7 @@ module.exports = (robot) => {
         }
       });
 
-      // console.log(response.data);
+      console.log(response.data);
 
       const results = response.data.results;
       if (!results || results.length === 0) {
@@ -59,7 +59,7 @@ module.exports = (robot) => {
         throw new Error('国名が見つかりませんでした。');
       }
 
-      // console.log(countryName);
+      console.log(countryName);
       // console.log(typeof countryName);
 
       // クイズを出題
