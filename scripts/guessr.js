@@ -1,7 +1,7 @@
 const { Client } = require('@googlemaps/google-maps-services-js');
 require('dotenv').config();
 
-// APIキーは.envファイルから環境変数として読み込まれる
+// APIキーを.envファイルから環境変数として読み込み
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 // APIキーが設定されているかを確認
@@ -51,7 +51,7 @@ module.exports = (robot) => {
           }
         }
         if (countryName) {
-          break; // 国名が見つかったらループを終了
+          break;
         }
       }
 
@@ -59,8 +59,8 @@ module.exports = (robot) => {
         throw new Error('国名が見つかりませんでした。');
       }
 
-      console.log(countryName);
-      console.log(typeof countryName);
+      // console.log(countryName);
+      // console.log(typeof countryName);
 
       // クイズを出題
       res.send(`この場所はどこの国でしょう？国名を答えてね！\n緯度: ${latitude}\n経度: ${longitude}`);
