@@ -12,25 +12,12 @@ if (!GOOGLE_MAPS_API_KEY) {
 // Geocoding APIのクライアントを作成
 const googleMapsClient = new Client({});
 
+let currentCountryName = null; // 現在のクイズの国名をグローバル変数として定義
+
 module.exports = (robot) => {
-  // 回答の受信時の処理
-  function handleAnswer(msg) {
-    const answer = msg.match[1].trim().replace(/^Hubot\s+/i, ''); // ユーザーの回答
-
-    // 正誤判定
-    if (answer === countryName) {
-      msg.send('正解です！');
-    } else {
-      msg.send(`残念！正解は ${countryName} です！`);
-    }
-  }
-
   // メッセージの受信時に実行される処理
   robot.respond(/guess$/i, async (res) => {
     try {
-      // 以前の回答時の処理を削除
-      robot.removeListener('hear', handleAnswer);
-
       // ランダムな緯度・経度を生成
       const minLatitude = -60.0;  // 緯度の最小値
       const maxLatitude = 90.0;   // 緯度の最大値
@@ -56,34 +43,49 @@ module.exports = (robot) => {
         throw new Error('指定した緯度・経度に対応する場所が見つかりませんでした。');
       }
 
-      let countryName = null;
+      currentCountryName = null; // 現在のクイズの国名をリセット
+
       for (const result of results) {
         for (const component of result.address_components) {
           if (component.types.includes('country')) {
-            countryName = component.long_name;
+            currentCountryName = component.long_name;
             break;
           }
         }
-        if (countryName) {
+        if (currentCountryName) {
           break;
         }
       }
 
-      if (!countryName) {
+      if (!currentCountryName) {
         throw new Error('国名が見つかりませんでした。');
       }
 
-      console.log(countryName);
-      // console.log(typeof countryName);
+      console.log(currentCountryName);
 
       // クイズを出題
       res.send(`この場所はどこの国でしょう？国名を答えてね！\n緯度: ${latitude}\n経度: ${longitude}`);
 
-      // 回答の受信時の処理を登録
-      robot.hear(/^(.+)/i, handleAnswer);
     } catch (err) {
       console.error(err);
       res.reply('ごめんね、うまくデータを取得できなかったみたい。もう一度試してみてね。');
+    }
+  });
+
+  // 回答の受信時の処理を登録
+  robot.hear(/^(.+)/i, (msg) => {
+    // 現在のクイズの国名がnullでない場合のみ判定を行う
+    if (currentCountryName) {
+      const answer = msg.match[1].trim().replace(/^Hubot\s+/i, ''); // ユーザーの回答
+
+      // 正誤判定
+      if (answer === currentCountryName) {
+        msg.send('正解です！');
+      } else {
+        msg.send(`残念！正解は ${currentCountryName} です！`);
+      }
+      // クイズが終了したので、現在の国名をnullにリセット
+      currentCountryName = null;
     }
   });
 };
