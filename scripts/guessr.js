@@ -1,12 +1,12 @@
 const { Client } = require('@googlemaps/google-maps-services-js');
 require('dotenv').config();
 
-// APIキーを.envファイルから環境変数として読み込み
+// APIキーを環境変数として読み込み
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
 // APIキーが設定されているかを確認
 if (!GOOGLE_MAPS_API_KEY) {
-  throw new Error('Google Maps APIキーが設定されていません。.envファイルを確認してください。');
+  throw new Error('Google Maps APIキーが設定されていません。');
 }
 
 // Geocoding APIのクライアントを作成
@@ -68,7 +68,7 @@ module.exports = (robot) => {
 
     } catch (err) {
       console.error(err);
-      res.reply('ごめんね、うまくデータを取得できなかったみたい。もう一度試してみてね。');
+      res.send('ごめんね、うまくデータを取得できなかったみたい。もう一度試してみてね。');
     }
   });
 
