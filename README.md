@@ -1,4 +1,4 @@
-# Geocord Guessr
+# Geocode Guessr
 
  Google Maps PlattformのGeocoding APIを使って、座標からその国を当てるというチャットボット形式のゲームです。
 
